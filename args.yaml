@@ -5,3 +5,15 @@ config:
 
 model_args:
     model: 'logistic'
+
+preproc_args:
+  encoding_type: 'label'
+  skip_columns: ['TransactionDates','PaymentsHistory','PaymentMethod', 'SupplierName', 'ExpectedTermDate','FirstPaymentDate','LastPaymentDate']
+  na_columns: ['UpsellDate','Age','Region']
+  replacements:
+    UpsellDate: -1
+    Age: 'MEAN'
+    Region: 'MODE'
+
+validation_args:
+  k: 10

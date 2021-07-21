@@ -32,16 +32,16 @@ def get_model_params(ensemble = False, model_name = ''):
 
 def get_preproc_params():
     all_args = get_all_args()
-    return all_args['preproc']
+    return all_args['preproc_args']
 
 def get_validation_params():
     all_args = get_all_args()
-    return all_args['validation']
+    return all_args['validation_args']
 
 def break_date(date):
     if date != '':
         return (date.day, date.month, date.year)
-    return ('','','')
+    return (-1,-1,-1)
 
 def extract_date(datestring):
     date = ''
@@ -55,6 +55,8 @@ def extract_date(datestring):
                 date = datetime.strptime(datestring,'%m-%d-%Y')
             except ValueError:
                 return ''
+    except TypeError:
+        return ''
     return date
 
 def is_null(value):
