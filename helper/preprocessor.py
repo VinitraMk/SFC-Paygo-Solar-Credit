@@ -24,11 +24,17 @@ class Preprocessor:
 
     def start_preprocessing(self):
         print('\nStarting preprocessing of data...\n')
+        self.remove_dirty_values()
         self.preprocess_missing_data()
         self.preprocess_date_columns()
         self.preprocess_categorical_columns()
         self.drop_skip_columns()
         self.separate_data()
+    
+    def remove_dirty_values(self):
+        for col in self.data.columns:
+            if col == 'Town':
+                self.data[col] = self.data[col].replace('UNKNOWN', np.NaN)
 
     def preprocess_missing_data(self):
         preproc_args = get_preproc_params()
@@ -69,9 +75,6 @@ class Preprocessor:
         self.data = self.data.drop(columns=preproc_args['skip_columns'])
 
     def separate_data(self):
-        target_cols = ['m1','m2','m3','m4','m5','m6']
         self.test = self.data[self.data['ID'].isin(self.test_ids)]
         self.train = self.data[self.data['ID'].isin(self.train_ids)]
-        self.train_Y = self.train[target_cols]
-        self.train = self.train.drop(columns=target_cols+['ID'])
-        return self.train, self.train_Y, self.test, self.test_ids
+        return self.train, self.test, self.test_ids

@@ -9,11 +9,12 @@ model_args:
 preproc_args:
   encoding_type: 'label'
   skip_columns: ['TransactionDates','PaymentsHistory','PaymentMethod', 'SupplierName', 'ExpectedTermDate','FirstPaymentDate','LastPaymentDate']
-  na_columns: ['UpsellDate','Age','Region']
+  na_columns: ['UpsellDate','Age','Region','Town']
   replacements:
     UpsellDate: -1
     Age: 'MEAN'
     Region: 'MODE'
+    Town: 'MODE'
 
 validation_args:
   k: 10
