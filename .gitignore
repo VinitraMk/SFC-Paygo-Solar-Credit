@@ -1,5 +1,8 @@
-env/
+azureml-env/
 output/
 input/
+experimental_logs/
+processed_io/
+visualizations/
 __pycache__/
 *.py[cod]

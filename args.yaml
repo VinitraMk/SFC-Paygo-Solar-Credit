@@ -1,14 +1,21 @@
 config:
     input_path: "C:\\Users\\vimurali\\ML\\SFC Paygo Solar Credit\\input"
+    processed_io_path: "C:\\Users\\vimurali\\ML\\SFC Paygo Solar Credit\\processed_io"
     output_path: "C:\\Users\\vimurali\\ML\\SFC Paygo Solar Credit\\output"
-    experimental_output_path: "C:\\Users\\vimurali\\ML\\SFC Paygo Solar Credit\\experimental_output"
+    visualizations_path: "C:\\Users\\vimurali\\ML\\SFC Paygo Solar Credit\\visualizations"
+    experimental_output_path: "C:\\Users\\vimurali\\ML\\SFC Paygo Solar Credit\\experimental_logs"
+    azureblob_name: "azureml-blobstore-31aeaa24-564c-4aa8-bdf4-fc4b5707bd1b"
 
 model_args:
-    model: 'logistic'
+    model: 'linear'
+    normalize: True
 
 preproc_args:
-  encoding_type: 'label'
-  skip_columns: ['TransactionDates','PaymentsHistory','PaymentMethod', 'SupplierName', 'ExpectedTermDate','FirstPaymentDate','LastPaymentDate']
+  encoding_type: 'ordinal'
+  skip_columns: ['TransactionDates','PaymentsHistory','PaymentMethod', 'SupplierName', 'ExpectedTermDate','FirstPaymentDate','LastPaymentDate','UpsellDate','RegistrationDate']
+  date_columns: ['RegistrationDate','UpsellDate','ExpectedTermDate','FirstPaymentDate','LastPaymentDate']
+  date_skip: ['RegistrationDay','RegistrationMonth','RegistrationYear','UpsellDay','UpsellMonth','UpsellYear','ExpectedTermDay','ExpectedTermMonth','ExpectedTermYear',
+  'FirstPaymentDay','FirstPaymentMonth','FirstPaymentYear','LastPaymentDay','LastPaymentMonth','LastPaymentYear']
   na_columns: ['UpsellDate','Age','Region','Town']
   replacements:
     UpsellDate: -1
@@ -17,4 +24,4 @@ preproc_args:
     Town: 'MODE'
 
 validation_args:
-  k: 10
+  k: 3

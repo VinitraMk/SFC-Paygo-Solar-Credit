@@ -2,6 +2,7 @@ from datetime import datetime
 from os import path, getenv
 import yaml
 import pandas as pd
+import joblib
 
 def get_filename(filename):
     now = datetime.now().strftime('%d%m%Y-%H%M%S')
@@ -64,4 +65,10 @@ def is_null(value):
 
 def save_fig(file_name, plt):
     config = get_all_args()['config']
-    plt.savefig(f'{config["visualizations"]}/{file_name}.png')
+    plt.savefig(f'{config["visualizations_path"]}/{file_name}.png')
+
+def save_model(model, model_path, model_name):
+    joblib.dump(model, f'{model_path}/{model_name}_model.sav')
+
+def download_model(model_path):
+    return joblib.load(model_path)
