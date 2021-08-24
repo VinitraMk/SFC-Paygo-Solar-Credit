@@ -17,6 +17,8 @@ if __name__ == "__main__":
     k = int(sys.argv[6])
     model_filename = sys.argv[7]
     model_params = json.loads(sys.argv[8])
+    preproc_params = json.loads(sys.argv[9]) if sys.argv[9] != '' else ''
+    selected_features = sys.argv[10]
     input_data_path = f'{mounted_input_path}/input'
     model_path = f'{mounted_input_path}/models'
     model_output_path = f'{mounted_output_path}/models'
@@ -64,12 +66,14 @@ if __name__ == "__main__":
             avg_score = avg_score + log_file_contents['model_output']['current_run_rmse']
         else:
             avg_score = log_file_contents['model_output']['current_run_rmse']
-        if epoch_index == k-1:
+        if epoch_index == k-1 and k!=0:
             avg_score = avg_score / k
     log_file_contents['model_output'] = { 'current_run_rmse': avg_score }
     if save_preds == True:
         log_path = f'{log_output_path}/{model_filename}.txt'
         log_file_contents['model_params'] = model_params
+        log_file_contents['preproc_params'] = preproc_params
+        log_file_contents['selected_features'] = selected_features
         #log_file_contents['model_output'] = { 'final_validation_rmse': avg_score }
         preds_df = pd.DataFrame(ypreds, columns=['m1','m2','m3','m4','m5','m6'])
         preds_df = test_ids.join(preds_df)

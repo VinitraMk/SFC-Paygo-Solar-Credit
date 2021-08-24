@@ -1,0 +1,8 @@
+model: 'decision_tree'
+max_depth: 20
+min_samples_split: 10
+min_samples_leaf: 20
+max_features: 'auto'
+max_leaf_nodes: 50
+min_impurity_split: 0
+ccp_alpha: 0.0

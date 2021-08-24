@@ -1,0 +1,7 @@
+model: 'knn'
+n: 5
+weights: 'uniform'
+algorithm: 'auto'
+leaf_size: 30
+p: 2
+metric: 'minkowski'

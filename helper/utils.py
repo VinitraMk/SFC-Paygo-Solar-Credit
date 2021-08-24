@@ -1,3 +1,4 @@
+from constants.general_enums import GeneralConstants
 from datetime import datetime
 from os import path, getenv
 import yaml
@@ -39,25 +40,43 @@ def get_validation_params():
     all_args = get_all_args()
     return all_args['validation_args']
 
-def break_date(date):
+def break_date(date, format = GeneralConstants.DATE_FORMAT_MMDDYY):
     if date != '':
-        return (date.day, date.month, date.year)
-    return (-1,-1,-1)
+        if format == GeneralConstants.DATE_FORMAT_MMDDYY:
+            return (date.day, date.month, date.year)
+        elif format == GeneralConstants.DATE_FORMAT_MMYY:
+            return (date.month, date.year)
+    else:
+        if format == GeneralConstants.DATE_FORMAT_MMDDYY:
+            return (-1, -1, -1)
+        elif format == GeneralConstants.DATE_FORMAT_MMYY:
+            return (-1, -1)
 
-def extract_date(datestring):
+def extract_date(datestring, format = GeneralConstants.DATE_FORMAT_MMDDYY):
     date = ''
-    try:
-        date = datetime.strptime(datestring,'%d-%m-%Y')
-    except ValueError:
+    if format == GeneralConstants.DATE_FORMAT_MMDDYY:
         try:
-            date = datetime.strptime(datestring, '%Y-%m-%d')
+            date = datetime.strptime(datestring,'%d-%m-%Y')
         except ValueError:
             try:
-                date = datetime.strptime(datestring,'%m-%d-%Y')
+                date = datetime.strptime(datestring, '%Y-%m-%d')
+            except ValueError:
+                try:
+                    date = datetime.strptime(datestring,'%m-%d-%Y')
+                except ValueError:
+                    return ''
+        except TypeError:
+            return ''
+    else:
+        try:
+            date = datetime.strptime(datestring,'%m-%Y')
+        except ValueError:
+            try:
+                date = datetime.strptime(datestring, '%Y-%m')
             except ValueError:
                 return ''
-    except TypeError:
-        return ''
+        except TypeError:
+            return ''
     return date
 
 def is_null(value):
@@ -65,7 +84,7 @@ def is_null(value):
 
 def save_fig(file_name, plt):
     config = get_all_args()['config']
-    plt.savefig(f'{config["visualizations_path"]}/{file_name}.png')
+    plt.savefig(f'{config["visualizations_path"]}\\{file_name}.png')
 
 def save_model(model, model_path, model_name):
     joblib.dump(model, f'{model_path}/{model_name}_model.sav')

@@ -1,0 +1,6 @@
+model: 'linear_ridge'
+alpha: 1.0
+normalize: True
+max_iter: 100
+solver: 'auto'
+tolerance: 0.001

@@ -7,21 +7,34 @@ config:
     azureblob_name: "azureml-blobstore-31aeaa24-564c-4aa8-bdf4-fc4b5707bd1b"
 
 model_args:
-    model: 'linear'
-    normalize: True
-
+    model: 'decision_tree'
+    max_depth: 35
+    min_samples_split: 10
+    min_samples_leaf: 20
+    max_features: 'log2'
+    max_leaf_nodes: 50
+    min_impurity_split: 0
+    ccp_alpha: 0.0
+    
 preproc_args:
-  encoding_type: 'ordinal'
-  skip_columns: ['TransactionDates','PaymentsHistory','PaymentMethod', 'SupplierName', 'ExpectedTermDate','FirstPaymentDate','LastPaymentDate','UpsellDate','RegistrationDate']
-  date_columns: ['RegistrationDate','UpsellDate','ExpectedTermDate','FirstPaymentDate','LastPaymentDate']
-  date_skip: ['RegistrationDay','RegistrationMonth','RegistrationYear','UpsellDay','UpsellMonth','UpsellYear','ExpectedTermDay','ExpectedTermMonth','ExpectedTermYear',
-  'FirstPaymentDay','FirstPaymentMonth','FirstPaymentYear','LastPaymentDay','LastPaymentMonth','LastPaymentYear']
-  na_columns: ['UpsellDate','Age','Region','Town']
-  replacements:
-    UpsellDate: -1
-    Age: 'MEAN'
-    Region: 'MODE'
-    Town: 'MODE'
+    degree: 3
+    correlation_threshold: 0.1
+    encoding_type: 'ordinal'
+    skip_columns: ['PaymentMethod', 'SupplierName', 'ExpectedTermDate','UpsellDate','RegistrationDate', 'AccessoryRate', 'DaysOnDeposit', 'RatePerUnit', 'Region',
+    'rateTypeEntity','MainApplicantGender','Age','Town','LastPaymentDate']
+    date_cleanup_columns: ['FirstPaymentDate']
+    date_columns: ['RegistrationDate','UpsellDate','ExpectedTermDate','FirstPaymentDate','LastPaymentDate']
+    date_skip: ['RegistrationDay','RegistrationMonth','RegistrationYear','UpsellDay','UpsellMonth','UpsellYear','ExpectedTermDay','ExpectedTermMonth','ExpectedTermYear',
+    'FirstPaymentDay','FirstPaymentYear', 'LastPaymentDay', 'LastPaymentYear']
+    na_columns: ['UpsellDate','Age','Region','Town']
+    categorical_columns: ['MainApplicantGender','rateTypeEntity', 'Region','Town', 'Occupation','TermCat']
+    numeric_columns: ['Deposit','AccessoryRate','RatePerUnit','DaysOnDeposit','Age','Term', 'TotalContractValue']
+    replacements:
+        UpsellDate: -1
+        Age: 'MEAN'
+        Region: 'MODE'
+        Town: 'MODE'
 
 validation_args:
-  k: 3
+    enable_k_cross: True
+    k: 3

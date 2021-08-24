@@ -1,0 +1,8 @@
+model: 'linear_elasticnet'
+alpha: 0.001
+normalize: True
+l1_ratio: 0.4
+max_iter: 1000
+tolerance: 0.0001
+is_coef_positive: True 
+coef_selection: 'random'
