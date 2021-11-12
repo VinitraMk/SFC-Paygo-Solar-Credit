@@ -1,5 +1,6 @@
 #python imports
 import json
+from models.random_forest import RandomForest
 from models.decision_tree import DecisionTree
 import os
 from azureml.core import Workspace, Experiment as AzExperiment, Environment, ScriptRunConfig
@@ -39,6 +40,9 @@ def make_model(args):
     elif args['model'] == Model.DECISION_TREE:
         decision_tree_regressor = DecisionTree(args)
         return decision_tree_regressor.get_model()
+    elif args['model'] == Model.RANDOM_FOREST:
+        random_forest_regressor = RandomForest(args)
+        return random_forest_regressor.get_model()
     else:
         print('Invalid model name :-( \n')
         exit()
@@ -113,7 +117,7 @@ def start_validation(data, args, validation_args, preproc_args, test_ids, test_X
     filename = get_filename(args['model'])
     print('\n\n*************** Final Run ****************')
     validate.prepare_full_dataset()
-    train_model_in_azure(azexp, azws, azuserenv, args['model'], -1 , validation_args['k'], model_args_string, preproc_args_string, True, filename, str(features))
+    train_model_in_azure(azexp, azws, azuserenv, args['model'], -1 , validation_args['k'], model_args_string, preproc_args_string, True, filename, features)
     download_output(filename, args['model'])
 
 def read_args():
@@ -125,7 +129,7 @@ def read_args():
     model = make_model(args)
     model_path = f'{config["processed_io_path"]}/models'
     save_model(model, model_path, args['model'])
-    start_validation(data, args, validation_args, preproc_args, test_ids, test_X, features)
+    start_validation(data, args, validation_args, preproc_args, test_ids, test_X, str(features))
     #main(args, validation_args)
 
 def set_root_dir():

@@ -24,6 +24,7 @@ class Preprocessor:
     preproc_args = None
     config = None
     poly_features = None
+    selected_features = None
 
     def __init__(self):
         self.config = get_config()
@@ -38,13 +39,16 @@ class Preprocessor:
         print('\nStarting preprocessing of data...')
         self.remove_dirty_values()
         self.preprocess_missing_data()
-        self.generate_statistics_from_history()
+        if self.preproc_args['use_history_statistics']:
+            self.generate_statistics_from_history()
         self.generate_polynomial_features()
         self.drop_skip_columns()
         self.preprocess_categorical_columns()
         self.plot_correlation()
         self.preprocess_date_columns()
-        #self.preprocess_history_columns()
+        self.summarize_features()
+        if not(self.preproc_args['use_history_statistics']):
+            self.preprocess_history_columns()
         self.plot_distribution()
         return self.separate_data()
     
@@ -90,7 +94,6 @@ class Preprocessor:
         save_fig('correlation_matrix', plt)
         plt.clf()
         self.data = self.data.drop(columns = poly_features_to_drop)
-        print('\tSelected features: ', list(self.data.columns))
 
     def preprocess_date_columns(self):
         print('\tConverting date columns...')
@@ -132,6 +135,11 @@ class Preprocessor:
         self.data.loc[((self.data['TotalContractValue'] >= 25000) & (self.data['TotalContractValue'] <= 5000)), 'ContractCat'] = Contract.BTWN_25K_AND_50K.value
         self.data.loc[(self.data['TotalContractValue'] > 50000), 'ContractCat'] = Contract.MORE_THAN_50K.value
         self.data = self.data.drop(columns=['TotalContractValue'])
+
+    def summarize_features(self):
+        selected_features = self.poly_features + list(self.data.columns)
+        self.selected_features = [x for x in selected_features if x not in ['m1','m2','m3','m4','m5','m6']]
+        print('\tSelected Features: ',self.selected_features)
 
     def preprocess_categorical_columns(self):
         print('\tEncoding categorical variables...')
@@ -245,8 +253,7 @@ class Preprocessor:
         self.train = self.data[self.data['ID'].isin(self.train_ids)]
         self.train = self.train.drop(columns=['ID'])
         self.test = self.test.drop(columns=['ID','m1', 'm2', 'm3', 'm4', 'm5', 'm6'])
-        features = self.poly_features + list(self.test.columns)
-        return self.train, self.test, self.test_ids, features
+        return self.train, self.test, self.test_ids, self.selected_features
 
     def plot_distribution(self):
         print('\tPlotting data distribution...\n')

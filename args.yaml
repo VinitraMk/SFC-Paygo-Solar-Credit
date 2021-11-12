@@ -7,18 +7,21 @@ config:
     azureblob_name: "azureml-blobstore-31aeaa24-564c-4aa8-bdf4-fc4b5707bd1b"
 
 model_args:
-    model: 'decision_tree'
-    max_depth: 35
+    model: 'random_forest'
+    n_estimators: 80
+    max_depth: 40
     min_samples_split: 10
     min_samples_leaf: 20
-    max_features: 'log2'
+    max_features: 'auto'
     max_leaf_nodes: 50
     min_impurity_split: 0
     ccp_alpha: 0.0
+    bootstrap_samples: False
     
 preproc_args:
     degree: 3
     correlation_threshold: 0.1
+    use_history_statistics: False
     encoding_type: 'ordinal'
     skip_columns: ['PaymentMethod', 'SupplierName', 'ExpectedTermDate','UpsellDate','RegistrationDate', 'AccessoryRate', 'DaysOnDeposit', 'RatePerUnit', 'Region',
     'rateTypeEntity','MainApplicantGender','Age','Town','LastPaymentDate']
